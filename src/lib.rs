@@ -19,4 +19,7 @@ impl GameState {
 		    players: Vec::new(),
 		}
 	}
+	pub fn serialize(&self) -> Vec<u8> {
+	    vec![0]
+	}
 }

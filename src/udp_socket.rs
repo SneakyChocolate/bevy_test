@@ -6,9 +6,19 @@ pub struct UdpSocket {
 }
 
 impl UdpSocket {
-	pub fn receive_from(&mut self) -> Result<&[u8], Box<dyn Error>> {
+	pub fn new(address: &str) -> Result<Self, Box<dyn std::error::Error>> {
+		let s = Self {
+		    socket: std::net::UdpSocket::bind(address)?,
+		    buffer: [0; 10000],
+		};
+		Ok(s)
+	}
+	pub fn receive_from(&mut self) -> Result<(&[u8], std::net::SocketAddr), Box<dyn Error>> {
 		let (length, address) = self.socket.recv_from(&mut self.buffer)?;
-	    Ok(&self.buffer[..length])
+	    Ok((&self.buffer[..length], address))
+	}
+	pub fn send_to(&self, buffer: &[u8], address: &std::net::SocketAddr) {
+		self.socket.send_to(buffer, address).unwrap();
 	}
 }
 
