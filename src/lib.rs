@@ -20,6 +20,6 @@ impl GameState {
 		}
 	}
 	pub fn serialize(&self) -> Vec<u8> {
-	    vec![0]
+	    vec![0,1,2]
 	}
 }
