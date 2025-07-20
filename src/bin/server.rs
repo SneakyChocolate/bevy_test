@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 use bevy_test::*;
 
-
 fn main() {
 	App::new()
 		// .add_plugins(DefaultPlugins)
@@ -35,3 +34,4 @@ pub fn upload_players(query: Query<&Player>, mut game_state: ResMut<GameState>) 
 	}
 	game_state.players = players;
 }
+
