@@ -23,5 +23,16 @@ impl UdpSocket {
 		self.socket.send_to(buffer, address)?;
 		Ok(())
 	}
+	pub fn connect(&self, address: &str) -> Result<(), std::io::Error> {
+		return self.socket.connect(address);
+	}
+	pub fn recv(&mut self) -> Result<&[u8], Box<dyn std::error::Error>> {
+		let length = self.socket.recv(&mut self.buffer)?;
+	    Ok(&self.buffer[..length])
+	}
+	pub fn send(&self, bytes: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
+		self.socket.send(bytes)?;
+	    Ok(())
+	}
 }
 

@@ -7,12 +7,12 @@ fn main() {
 	let (user_message_sender, user_message_receiver) = bounded::<Vec<u8>>(50);
 
 	let networking_thread = std::thread::spawn(move || {
-		let target_addresses = Vec::<std::net::SocketAddr>::new();
-		let mut server_socket = udp_socket::UdpSocket::new("0.0.0.0:7878").unwrap();
+		let mut client_socket = udp_socket::UdpSocket::new("0.0.0.0:0").unwrap();
+		client_socket.connect("127.0.0.1:7878").unwrap();
 
 		loop {
 			// Receive
-			match server_socket.receive_from() {
+			match client_socket.receive_from() {
 				Ok((data, addr)) => {
 					println!("Received from {}: {:?}", addr, data);
 					user_message_sender.send(data.to_vec()).ok();
@@ -23,11 +23,6 @@ fn main() {
 			// Send
 			match gamestate_receiver.try_recv() {
 				Ok(gamestate) => {
-					for address in &target_addresses {
-						if let Err(e) = server_socket.send_to(&gamestate, address) {
-							eprintln!("send error to {}: {:?}", address, e);
-						}
-					}
 				}
 				Err(_) => continue,
 			}
